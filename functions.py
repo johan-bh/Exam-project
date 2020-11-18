@@ -32,7 +32,7 @@ def load_measurements(filename, fmode):
         # Drop all corrupt rows if there is a NaN value in the last row
         if np.nan in df.iloc[-1]:
             df = df.dropna()
-        # Replace NaN values with the latest valid measurement
+        # Replace NaN values with the next valid measurement
         else:
             df = df.bfill(axis=0)
 
