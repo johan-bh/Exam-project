@@ -41,13 +41,13 @@ def load_measurements(filename, fmode):
         df = df.dropna()
 
     # Split the DataFrame into a N x 6 time-matrix and a N x 4 data-matrix
-    #tvec = df.iloc[:,:-4]
-    #data = df.iloc[:,-4:]
+    tvec = df.iloc[:,:-4]
+    data = df.iloc[:,-4:]
 
     #df1 = df[df.isna().any(axis=1)]
     #print(df1)
 
-    return df
+    return (tvec, data)
 
 #print(load_measurements("2008.csv","drop"))
 
@@ -56,29 +56,33 @@ def load_measurements(filename, fmode):
 pd.set_option('display.max_rows', 100)
 
 
+def aggregate_measurements(tvec, data, period):
+    # Concatenate tvec and data
+    df = pd.concat([tvec,data],axis=1)
 
-def aggregate_measurements(df, period):
+    x = df.groupby("hour").agg('zone 1').sum()
 
-    tvec = df.iloc[:,:-4]
-    data = df.iloc[:,-4:]
+    if period == 'hour':
+        # Group by year, month, day and hour and aggregate the zone
+        agg = df.groupby(['year', 'month', 'day', 'hour']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
+        data_a = agg.reset_index().iloc[:,-4:]
+        tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day', 'hour'])
+    elif period == 'day':
+        agg = df.groupby(['year', 'month', 'day']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
+        data_a = agg.reset_index().iloc[:,-4:]
+        tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day'])
+    elif period == 'month':
+        agg = df.groupby(['year', 'month']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
+        data_a = agg.reset_index().iloc[:,-4:]
+        tvec_a = tvec.drop_duplicates(subset = ['year', 'month'])
 
-    if period == "hour":
-        data_a = df.groupby('hour').agg({'zone 1': 'sum','zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
-    elif period == "day":
-        data_a = df.groupby('day').agg({'zone 1': 'sum', 'zone 2': 'sum', 'zone 3': 'sum', 'zone 4': 'sum'})
-    elif period == "month":
-        data_a = df.groupby('month').agg({'zone 1': 'sum', 'zone 2': 'sum', 'zone 3': 'sum', 'zone 4': 'sum'})
-    elif period == "hour of the day":
-        data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
+    # print(x)
+    return (tvec_a, data_a)
 
-    ddd = tvec.drop_duplicates(subset=['year','month','day','hour'])
-
-    return data_a
-
-print(aggregate_measurements(load_measurements("2008.csv","drop"),"day"))
-
-
-
+tvec, data = load_measurements("2008.csv","drop")
+tvec_a, data_a =  aggregate_measurements(tvec,data,'day')
+print(tvec_a)
+print(data_a)
 
 def print_statistics(tvec, data):
 
