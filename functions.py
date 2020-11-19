@@ -75,12 +75,16 @@ def aggregate_measurements(tvec, data, period):
         agg = df.groupby(['year', 'month']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
         data_a = agg.reset_index().iloc[:,-4:]
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month'])
+    elif period == "hour of the day":
+        data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
+        tvec_a = tvec.drop_duplicates(subset = ['hour'])
+
 
     # print(x)
     return (tvec_a, data_a)
 
 tvec, data = load_measurements("2008.csv","drop")
-tvec_a, data_a =  aggregate_measurements(tvec,data,'day')
+tvec_a, data_a =  aggregate_measurements(tvec,data,'hour of the day')
 print(tvec_a)
 print(data_a)
 
