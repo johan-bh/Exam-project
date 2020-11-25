@@ -62,6 +62,12 @@ while True:
 
                             tvec, data = f.load_measurements(filename, dict[fmode])
                             data_loaded = True
+
+                            # Reset aggregated data when new data is loaded
+                            data_aggregated = False
+                            data_a = None
+                            tvec_a = None
+
                             print("\nData was loaded succesfully!\n")
                             break
                         else:
