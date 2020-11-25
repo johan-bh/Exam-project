@@ -4,7 +4,6 @@ import numpy as np
 
 def load_measurements(filename, fmode):
     """This function loads the data and processes the data based on user requests.
-
     input:
         filename (str): the name of the data file
         fmode (str): the requested data processing
@@ -60,10 +59,8 @@ def aggregate_measurements(tvec, data, period):
     # Concatenate tvec and data
     df = pd.concat([tvec,data],axis=1)
 
-    x = df.groupby("hour").agg('zone 1').sum()
-
+    # Group by year, month, day and hour and aggregate the zones
     if period == 'hour':
-        # Group by year, month, day and hour and aggregate the zone
         agg = df.groupby(['year', 'month', 'day', 'hour']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
         data_a = agg.reset_index().iloc[:,-4:]
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day', 'hour'])
@@ -79,15 +76,21 @@ def aggregate_measurements(tvec, data, period):
         data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
         tvec_a = tvec.drop_duplicates(subset = ['hour'])
 
-
-    # print(x)
     return (tvec_a, data_a)
 
 tvec, data = load_measurements("2008.csv","drop")
 tvec_a, data_a =  aggregate_measurements(tvec,data,'hour of the day')
-print(tvec_a)
-print(data_a)
+
+
 
 def print_statistics(tvec, data):
 
+
+
     return
+data_a["All"] = data_a.sum(axis=1)
+table = data_a.describe().iloc[3:].T
+table = table.rename(columns={"index":"Zone", "min":"Minimum", "25%":" 1. quart.",
+                      "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
+                     index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
+print(table)
