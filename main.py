@@ -8,6 +8,10 @@ cwd = os.getcwd()
 
 tvec = None
 data = None
+data_loaded = False
+tvec_a = None
+data_a = None
+data_aggregated = False
 
 # Start program loop
 while True:
@@ -57,6 +61,7 @@ while True:
                             dict = {"1": "forward fill", "2": "backward fill", "3": "drop"}
 
                             tvec, data = f.load_measurements(filename, dict[fmode])
+                            data_loaded = True
                             print("\nData was loaded succesfully!\n")
                             break
                         else:
@@ -72,7 +77,37 @@ while True:
                 continue
             break
     elif action == "2":
-        print("NOT DONE: Aggregate data")
+
+        if not data_loaded:
+            print("\nPlease load data first!\n")
+        else:
+            agg_options = [
+            "(1) Consumption per minute (no aggregation)",
+            "(2) Consumption per hour",
+            "(3) Consumption per day",
+            "(4) Consumption per month",
+            "(5) Hour-of-day consumption (hourly average)"
+            ]
+
+            period = input("\nWhat period would you like to aggregate for \n{}\n".format("\n".join(agg_options)))
+
+            if period == "1":
+                print("NOT DONE: Consumption per minute (no aggregation)")
+            elif period == "2":
+                tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour")
+                data_aggregated = True
+            elif period == "3":
+                tvec_a, data_a = f.aggregate_measurements(tvec, data, "day")
+                data_aggregated = True
+            elif period == "4":
+                tvec_a, data_a = f.aggregate_measurements(tvec, data, "month")
+                data_aggregated = True
+            elif period == "5":
+                tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour of the day")
+                data_aggregated = True
+            else:
+                print("Please enter a valid aggregate option")
+
     elif action == "3":
         print("NOT DONE: Print statistics")
     elif action == "4":
