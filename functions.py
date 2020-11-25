@@ -78,19 +78,17 @@ def aggregate_measurements(tvec, data, period):
 
     return (tvec_a, data_a)
 
-tvec, data = load_measurements("2008.csv","drop")
-tvec_a, data_a =  aggregate_measurements(tvec,data,'hour of the day')
-
-
-
 def print_statistics(tvec, data):
-
-
+    data["All"] = data.sum(axis=1)
+    table = data.describe().iloc[3:].T
+    table = table.rename(columns={"index":"Zone", "min":"Minimum", "25%":" 1. quart.",
+                          "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
+                         index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
+    print(table)
 
     return
-data_a["All"] = data_a.sum(axis=1)
-table = data_a.describe().iloc[3:].T
-table = table.rename(columns={"index":"Zone", "min":"Minimum", "25%":" 1. quart.",
-                      "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
-                     index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
-print(table)
+
+
+tvec, data = load_measurements("2008.csv","drop")
+tvec_a, data_a =  aggregate_measurements(tvec,data,'hour of the day')
+print_statistics(tvec_a, data_a)
