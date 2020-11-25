@@ -109,7 +109,13 @@ while True:
                 print("Please enter a valid aggregate option")
 
     elif action == "3":
-        print("NOT DONE: Print statistics")
+        if not data_loaded:
+            print("\nPlease load data first!\n")
+        else:
+            if data_aggregated:
+                f.print_statistics(tvec_a, data_a)
+            else:
+                f.print_statistics(tvec, data)
     elif action == "4":
         print("NOT DONE: Visualize data")
     elif action == "5":
