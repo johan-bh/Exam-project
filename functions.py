@@ -87,8 +87,3 @@ def print_statistics(tvec, data):
     print(table)
 
     return
-
-
-tvec, data = load_measurements("2008.csv","drop")
-tvec_a, data_a =  aggregate_measurements(tvec,data,'hour of the day')
-print_statistics(tvec_a, data_a)
