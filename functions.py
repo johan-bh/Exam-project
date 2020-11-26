@@ -85,5 +85,3 @@ def print_statistics(tvec, data):
                           "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
                          index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
     print(table)
-
-    return
