@@ -46,7 +46,7 @@ data_loaded = False
 tvec_a = None
 data_a = None
 data_aggregated = False
-period = ""
+aggregated_by = None
 
 # Start program loop
 while True:
@@ -141,27 +141,20 @@ while True:
 
             period = input("\nWhat period would you like to aggregate for \n{}\n".format("\n".join(agg_options)))
 
+            # Aggregate by minute
             if period == "1":
                 # If aggregation "minute" is chosen data is not aggregated
                 tvec_a = tvec
                 data_a = data
-                period = "minute"
-            elif period == "2":
-                tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour")
+                aggregated_by  = "minute"
                 data_aggregated = True
-                period = "hour"
-            elif period == "3":
-                tvec_a, data_a = f.aggregate_measurements(tvec, data, "day")
+            elif period in ["2", "3", "4", "4"]:
+                # Define options
+                dict = {"2": "hour", "3": "day", "4": "month", "5": "hour of the day"}
+
+                tvec_a, data_a = f.aggregate_measurements(tvec, data, dict[period])
+                aggregated_by = dict[period]
                 data_aggregated = True
-                period = "day"
-            elif period == "4":
-                tvec_a, data_a = f.aggregate_measurements(tvec, data, "month")
-                data_aggregated = True
-                period = "month"
-            elif period == "5":
-                tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour of the day")
-                data_aggregated = True
-                period = "hour of the day"
             else:
                 print("Please enter a valid aggregate option")
 
@@ -170,7 +163,7 @@ while True:
             print("\nPlease load data first!\n")
         else:
             if data_aggregated:
-                print("\nConsumption per {} in watt-hour\n".format(period))
+                print("\nConsumption per {} in watt-hour\n".format(aggregated_by))
                 f.print_statistics(tvec_a, data_a)
             else:
                 print("\nConsumption per minute in watt-hour\n")
