@@ -132,7 +132,9 @@ while True:
             period = input("\nWhat period would you like to aggregate for \n{}\n".format("\n".join(agg_options)))
 
             if period == "1":
-                print("NOT DONE: Consumption per minute (no aggregation)")
+                # If aggregation "minute" is chosen data is not aggregated
+                tvec_a = tvec
+                data_a = data
             elif period == "2":
                 tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour")
                 data_aggregated = True
