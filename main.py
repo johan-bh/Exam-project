@@ -131,32 +131,42 @@ while True:
         if not data_loaded:
             print("\nPlease load data first!\n")
         else:
-            agg_options = [
-            "(1) Consumption per minute (no aggregation)",
-            "(2) Consumption per hour",
-            "(3) Consumption per day",
-            "(4) Consumption per month",
-            "(5) Hour-of-day consumption (hourly average)"
-            ]
+            while True:
+                agg_options = [
+                "(1) Consumption per minute (no aggregation)",
+                "(2) Consumption per hour",
+                "(3) Consumption per day",
+                "(4) Consumption per month",
+                "(5) Hour-of-day consumption (hourly average)",
+                "(6) Back to main menu"
+                ]
 
-            period = input("\nWhat period would you like to aggregate for \n{}\n".format("\n".join(agg_options)))
+                period = input("\nWhat period would you like to aggregate for \n{}\n".format("\n".join(agg_options)))
 
-            # Aggregate by minute
-            if period == "1":
-                # If aggregation "minute" is chosen data is not aggregated
-                tvec_a = tvec
-                data_a = data
-                aggregated_by  = "minute"
-                data_aggregated = True
-            elif period in ["2", "3", "4", "4"]:
-                # Define options
-                dict = {"2": "hour", "3": "day", "4": "month", "5": "hour of the day"}
+                # Aggregate by minute
+                if period == "1":
+                    # If aggregation "minute" is chosen data is not aggregated
+                    tvec_a = tvec
+                    data_a = data
+                    aggregated_by  = "minute"
+                    data_aggregated = True
+                    print("\nAggregated by minute (No aggregation has been applied)\n")
+                    break
+                elif period in ["2", "3", "4", "4"]:
+                    # Define options
+                    dict = {"2": "hour", "3": "day", "4": "month", "5": "hour of the day"}
 
-                tvec_a, data_a = f.aggregate_measurements(tvec, data, dict[period])
-                aggregated_by = dict[period]
-                data_aggregated = True
-            else:
-                print("Please enter a valid aggregate option")
+                    tvec_a, data_a = f.aggregate_measurements(tvec, data, dict[period])
+                    aggregated_by = dict[period]
+                    data_aggregated = True
+                    print("\nData aggregated succesfully!\n")
+                    break
+                elif period == "6":
+                    print("\nData has not been aggregated\n")
+                    break
+                else:
+                    print("Please enter a valid aggregate option")
+                    continue
 
     elif action == "3":
         if not data_loaded:
