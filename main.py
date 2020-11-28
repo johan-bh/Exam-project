@@ -46,6 +46,7 @@ data_loaded = False
 tvec_a = None
 data_a = None
 data_aggregated = False
+period = ""
 
 # Start program loop
 while True:
@@ -144,18 +145,23 @@ while True:
                 # If aggregation "minute" is chosen data is not aggregated
                 tvec_a = tvec
                 data_a = data
+                period = "minute"
             elif period == "2":
                 tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour")
                 data_aggregated = True
+                period = "hour"
             elif period == "3":
                 tvec_a, data_a = f.aggregate_measurements(tvec, data, "day")
                 data_aggregated = True
+                period = "day"
             elif period == "4":
                 tvec_a, data_a = f.aggregate_measurements(tvec, data, "month")
                 data_aggregated = True
+                period = "month"
             elif period == "5":
                 tvec_a, data_a = f.aggregate_measurements(tvec, data, "hour of the day")
                 data_aggregated = True
+                period = "hour of the day"
             else:
                 print("Please enter a valid aggregate option")
 
@@ -164,8 +170,10 @@ while True:
             print("\nPlease load data first!\n")
         else:
             if data_aggregated:
+                print("\nConsumption per {} in watt-hour\n".format(period))
                 f.print_statistics(tvec_a, data_a)
             else:
+                print("\nConsumption per minute in watt-hour\n")
                 f.print_statistics(tvec, data)
     elif action == "4":
         print("NOT DONE: Visualize data")
