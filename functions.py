@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def load_measurements(filename, fmode):
@@ -85,3 +86,47 @@ def print_statistics(tvec, data):
                           "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
                          index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
     print(table)
+
+
+def visualize(data, zones, agg_by=False):
+
+    plt.ion()
+    plt.style.use('seaborn')
+    plt.title("Plot of Power Consumption")
+    """
+        plot the consumption in each zone or the combined consumption (all zones).
+        Display a plot with appropriate axes (time on the x-axis and consumption on the y-axis), labels,
+        and a title.
+        Use a bar chart if the aggregated data contains less than 25 measurements.
+    """
+
+    # if len(data) > 25:
+    # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
+    if zones == "all":
+        plt.plot(data["zone 1"].to_numpy(), c="blue")
+        plt.plot(data["zone 2"].to_numpy(), c="red")
+        plt.plot(data["zone 3"].to_numpy(), c="black")
+        plt.plot(data["zone 4"].to_numpy(), c="cyan")
+
+        # Hvis combined skal forstås som sumeret:
+        # plt.plot(data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
+
+        plt.ylabel("Watt Hours")
+        plt.xlabel("Minutes")
+        if agg_by:
+            plt.xlabel(agg_by)
+        
+        # plt.legend(["Consumption in: zone 1", "Consumption in: zone 4", "Consumption in: zone 3", "Consumption in: zone 4"])
+        plt.ylim(0)
+    else:
+        plt.plot(data["zone {}".format(int(zones))])
+
+    # else:
+    #     # TODO: The bar plots needs a x-value which is unknown in this instance..
+    #     if zones == "all":
+    #         plt.bar([data["zone 1"].to_numpy(),data["zone 2"].to_numpy(),data["zone 3"].to_numpy(),data["zone 4"].to_numpy()],
+    #                 color=("blue", "black", "green", "red"))
+    #     else:
+    #         plt.bar(data["zone {}".format(int(zones))])
+
+    return None
