@@ -67,7 +67,12 @@ while True:
 
         while True:
             # Ask user for filename. Has to be in same directory as script
-            filename = input("\nPlease enter the name of your data file. The file must be in the same directory as the script (case sensitive)\n")
+            filename = input("\nPlease enter the name of your data file (case sensitive).\nThe file must be in the same directory as the script.\nIf you wish to go back to the main menu enter \"back\"\n")
+
+            # Go back to main menu
+            if filename.lower() == "back":
+                print("\nLoad data aborted. Data has not been loaded \n")
+                break
 
             # Full file path
             file = cwd + "/" + filename
@@ -83,6 +88,7 @@ while True:
                             "(1) Forward fill",
                             "(2) Backward fill",
                             "(3) Drop",
+                            "(4) Back to main menu"
                         ]
 
                         # Ask for user input
@@ -103,6 +109,9 @@ while True:
                             tvec_a = None
 
                             print("\nData was loaded succesfully!\n")
+                            break
+                        elif fmode == "4":
+                            print("\nLoad data aborted. Data has not been loaded \n")
                             break
                         else:
                             print("\nPlease enter a valid way to handle corrupted data\n")
