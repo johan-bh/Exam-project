@@ -68,17 +68,39 @@ def aggregate_measurements(tvec, data, period):
         agg = df.groupby(['year', 'month', 'day', 'hour']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
         data_a = agg.reset_index().iloc[:,-4:]
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day', 'hour'])
+
+        # Replace columns with 0 to make sure time starts at the beginning of the hour
+        tvec_a["sec"] = tvec_a["sec"].apply(lambda x: 0)
+        tvec_a["min"] = tvec_a["min"].apply(lambda x: 0)
+
     elif period == 'day':
         agg = df.groupby(['year', 'month', 'day']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
         data_a = agg.reset_index().iloc[:,-4:]
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day'])
+
+        # Replace columns with 0 to make sure time starts at the beginning of the day
+        tvec_a["sec"] = tvec_a["sec"].apply(lambda x: 0)
+        tvec_a["min"] = tvec_a["min"].apply(lambda x: 0)
+        tvec_a["hour"] = tvec_a["hour"].apply(lambda x: 0)
+
     elif period == 'month':
         agg = df.groupby(['year', 'month']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
         data_a = agg.reset_index().iloc[:,-4:]
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month'])
+
+        # Replace columns with 0 to make sure time starts at the beginning of the month
+        tvec_a["sec"] = tvec_a["sec"].apply(lambda x: 0)
+        tvec_a["min"] = tvec_a["min"].apply(lambda x: 0)
+        tvec_a["hour"] = tvec_a["hour"].apply(lambda x: 0)
+        tvec_a["day"] = tvec_a["day"].apply(lambda x: 0)
+
     elif period == "hour of the day":
         data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
         tvec_a = tvec.drop_duplicates(subset = ['hour'])
+
+        # Replace columns with 0 to make sure time starts at the beginning of the hour
+        tvec_a["sec"] = tvec_a["sec"].apply(lambda x: 0)
+        tvec_a["min"] = tvec_a["min"].apply(lambda x: 0)
 
     return (tvec_a, data_a)
 
