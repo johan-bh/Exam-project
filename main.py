@@ -152,7 +152,7 @@ while True:
                     data_aggregated = True
                     print("\nAggregated by minute (No aggregation has been applied)\n")
                     break
-                elif period in ["2", "3", "4", "4"]:
+                elif period in ["2", "3", "4", "4", "5"]:
                     # Define options
                     dict = {"2": "hour", "3": "day", "4": "month", "5": "hour of the day"}
 
@@ -179,7 +179,7 @@ while True:
                 print("\nConsumption per minute in watt-hour\n")
                 f.print_statistics(tvec, data)
 
-    
+
     elif action == "4":
         if data_loaded:
             choice = input("Specify if you want the combined zones or particular ('all' or '1,2,3,4')\n")
@@ -193,7 +193,7 @@ while True:
         else:
             print("\nPlease load data first!\n")
 
-        
+
     elif action == "5":
         print("\nThank you for using our program :)")
         # Exit program
