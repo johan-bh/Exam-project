@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 def load_measurements(filename, fmode):
     """This function loads the data and processes the data based on user requests.
-    input:
+    Args:
         filename (str): the name of the data file
         fmode (str): the requested data processing
-    output:
-        a tuple containing 2 pandas DataFrames: tvec (N x 6 matrix),data (N x 4 matrix)
+    Return:
+        (tuple): a tuple containing 2 panda DataFrames: tvec (N x 6 matrix), data (N x 4 matrix)
     """
 
     # Load the data into a pandas DataFrame
@@ -49,14 +49,17 @@ def load_measurements(filename, fmode):
 
     return (tvec, data)
 
-#print(load_measurements("2008.csv","drop"))
-
-
-
-pd.set_option('display.max_rows', 100)
-
-
 def aggregate_measurements(tvec, data, period):
+    """
+    This aggregates the data
+
+    Args:
+        tvec (pandas DataFrame object): N x 6 matrix. Each row is a time vector
+        data (pandas DataFrame object): N x 4 matrix. Each row is a set of measurements
+        period (Str): How to aggregate the data. By "hour", "day", "month" og "hour of the day"
+    Return:
+        tuple: Two panda DataFrame objects - tvec (N x 6 matrix) and data (N x 4 matrix) aggregated according to period
+    """
     # Concatenate tvec and data
     df = pd.concat([tvec,data],axis=1)
 
@@ -80,6 +83,13 @@ def aggregate_measurements(tvec, data, period):
     return (tvec_a, data_a)
 
 def print_statistics(tvec, data):
+    """
+    Print statistics to screen
+
+    Args:
+        tvec (pandas DataFrame object): N x 6 matrix. Each row is a time vector
+        data (pandas DataFrame object): N x 4 matrix. Each row is a set of measurements
+    """
     data["All"] = data.sum(axis=1)
     table = data.describe().iloc[3:].T
     table = table.rename(columns={"index":"Zone", "min":"Minimum", "25%":" 1. quart.",
@@ -90,15 +100,21 @@ def print_statistics(tvec, data):
 
 def visualize(data, zones, agg_by=False):
 
-    plt.ion()
-    plt.style.use('seaborn')
-    plt.title("Plot of Power Consumption")
     """
         plot the consumption in each zone or the combined consumption (all zones).
         Display a plot with appropriate axes (time on the x-axis and consumption on the y-axis), labels,
         and a title.
         Use a bar chart if the aggregated data contains less than 25 measurements.
+
+        Args:
+            data (pandas DataFrame object): N x 4 matrix. Each row is a set of measurements
+            zones (str): Desired zones to plots
+            agg_by (str): The aggregation period for the data. Default False
     """
+    plt.ion()
+    plt.style.use('seaborn')
+    plt.title("Plot of Power Consumption")
+
 
     # if len(data) > 25:
     # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
@@ -115,7 +131,7 @@ def visualize(data, zones, agg_by=False):
         plt.xlabel("Minutes")
         if agg_by:
             plt.xlabel(agg_by)
-        
+
         # plt.legend(["Consumption in: zone 1", "Consumption in: zone 4", "Consumption in: zone 3", "Consumption in: zone 4"])
         plt.ylim(0)
     else:
