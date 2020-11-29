@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+pd.options.mode.chained_assignment = None  # chained assingment warning removed
 
 
 def load_measurements(filename, fmode):
