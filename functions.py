@@ -155,6 +155,12 @@ def visualize(data, tvec, zones, agg_by=False):
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
+
+        ax.set_xlablet("Watt Hours")
+        ax.set_ylablet("Minutes")
+        if agg_by:
+            ax.set_ylablet(agg_by)
+
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.arange(start, end, 30))
         for tick in ax.get_xticklabels():
