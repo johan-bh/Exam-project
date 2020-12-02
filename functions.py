@@ -16,7 +16,7 @@ def load_measurements(filename, fmode):
     # Load the data into a pandas DataFrame
     df = pd.read_csv(filename,header=None)
 
-    df = df.rename(columns={0:'year',1:'month',2:'day',3:'hour',4:'min',5:'sec',6:'zone 1',7:'zone 2',8:'zone 3',9:'zone 4'})
+    df = df.rename(columns={0:'year',1:'month',2:'day',3:'hour',4:'minute',5:'second',6:'zone 1',7:'zone 2',8:'zone 3',9:'zone 4'})
     # Replace all -1 values with NaN
     df = df.replace(to_replace=-1, value=np.nan)
 
@@ -76,7 +76,7 @@ def aggregate_measurements(tvec, data, period):
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day', 'hour'])
 
         # Replace columns with 0 to make sure time starts at the beginning of the hour
-        tvec_a.loc[:,["min", "sec"]] = 0
+        tvec_a.loc[:,["minute", "second"]] = 0
 
     elif period == 'day':
         agg = df.groupby(['year', 'month', 'day']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
@@ -84,7 +84,7 @@ def aggregate_measurements(tvec, data, period):
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month', 'day'])
 
         # Replace columns with 0 to make sure time starts at the beginning of the day
-        tvec_a.loc[:,["hour", "min", "sec"]] = 0
+        tvec_a.loc[:,["hour", "minute", "second"]] = 0
 
     elif period == 'month':
         agg = df.groupby(['year', 'month']).agg({'zone 1': 'sum', 'zone 2': 'sum','zone 3': 'sum','zone 4': 'sum'})
@@ -92,14 +92,14 @@ def aggregate_measurements(tvec, data, period):
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month'])
 
         # Replace columns with 0 to make sure time starts at the beginning of the month
-        tvec_a.loc[:,["day", "hour", "min", "sec"]] = 0
+        tvec_a.loc[:,["day", "hour", "minute", "second"]] = 0
 
     elif period == "hour of the day":
         data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
         tvec_a = tvec.drop_duplicates(subset = ['hour'])
 
         # Replace columns with 0 to make sure time starts at the beginning of the hour
-        tvec_a.loc[:,["min", "sec"]] = 0
+        tvec_a.loc[:,["minute", "second"]] = 0
 
     return (tvec_a, data_a)
 
@@ -113,7 +113,7 @@ def print_statistics(tvec, data):
     """
     data["All"] = data.sum(axis=1)
     table = data.describe().iloc[3:].T
-    table = table.rename(columns={"index":"Zone", "min":"Minimum", "25%":" 1. quart.",
+    table = table.rename(columns={"index":"Zone", "minute":"Minimum", "25%":" 1. quart.",
                           "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
                          index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
     print(table)
@@ -132,14 +132,15 @@ def visualize(data, tvec, zones, agg_by=False):
             zones (str): Desired zones to plots
             agg_by (str): The aggregation period for the data. Default False
     """
-    tvec["date"] = tvec["year"].astype(str) + "-" + tvec["month"].astype(str) + "-" +tvec["day"].astype(str)
+    # Convert to a columns of datetime objects
+    dates = pd.to_datetime(tvec)
 
     # if len(data) > 25:
     # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
     if zones == "all":
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(tvec["date"].to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
+        ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
         ax.set_xlablet("Watt Hours")
         ax.set_ylablet("Minutes")
@@ -154,7 +155,7 @@ def visualize(data, tvec, zones, agg_by=False):
     else:
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
+        ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.arange(start, end, 30))
         for tick in ax.get_xticklabels():
