@@ -172,6 +172,7 @@ def visualize(data, tvec, zones, agg_by=False):
 
     # mng = plt.get_current_fig_manager()
     # mng.resize(*mng.window.maxsize())
+    plt.tight_layout()
     plt.show()
 
     return None
