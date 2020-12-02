@@ -132,14 +132,14 @@ def visualize(data, tvec, zones, agg_by=False):
             zones (str): Desired zones to plots
             agg_by (str): The aggregation period for the data. Default False
     """
-    tvec["date"] = tvec["year"].astype(str) + "-" + tvec["month"].astype(str) + "-" +tvec["day"].astype(str)
+    dates = pd.to_datetime(tvec)
 
     # if len(data) > 25:
     # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
     if zones == "all":
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(tvec["date"].to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
+        ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
         ax.set_xlablet("Watt Hours")
         ax.set_ylablet("Minutes")
@@ -154,7 +154,7 @@ def visualize(data, tvec, zones, agg_by=False):
     else:
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
+        ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.arange(start, end, 30))
         for tick in ax.get_xticklabels():
