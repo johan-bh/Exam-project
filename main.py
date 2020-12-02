@@ -40,6 +40,7 @@ print("""
 ========================================================
 """)
 
+
 tvec = None
 data = None
 data_loaded = False
@@ -47,6 +48,7 @@ tvec_a = None
 data_a = None
 data_aggregated = False
 aggregated_by = None
+unit = "Wh"
 
 # Start program loop
 while True:
@@ -126,6 +128,7 @@ while True:
                 print("\nPlease provide a .csv file\n")
                 continue
             break
+
     elif action == "2":
 
         if not data_loaded:
@@ -150,7 +153,17 @@ while True:
                     data_a = data
                     aggregated_by  = "minute"
                     data_aggregated = True
+
+                    # Convert unit to kWh if any of the data points are bigger than 10 kWh
+                    if (data_a > 10000).any().any():
+                        data_a = data_a / 1000
+                        unit = "kWh"
+                        print("\nUnit converted to kWh")
+                    else:
+                        unit = "Wh"
+
                     print("\nAggregated by minute (No aggregation has been applied)\n")
+
                     break
                 elif period in ["2", "3", "4", "4", "5"]:
                     # Define options
@@ -159,6 +172,15 @@ while True:
                     tvec_a, data_a = f.aggregate_measurements(tvec, data, dict[period])
                     aggregated_by = dict[period]
                     data_aggregated = True
+
+                    # Convert unit to kWh if any of the data points are bigger than 10 kWh
+                    if (data_a > 10000).any().any():
+                        data_a = data_a / 1000
+                        unit = "kWh"
+                        print("\nUnit converted to kWh")
+                    else:
+                        unit = "Wh"
+
                     print("\nData aggregated succesfully!\n")
                     break
                 elif period == "6":
@@ -173,10 +195,11 @@ while True:
             print("\nPlease load data first!\n")
         else:
             if data_aggregated:
-                print("\nConsumption per {} in watt-hour\n".format(aggregated_by))
+                print("\nConsumption per {} in {}\n".format(aggregated_by, unit))
+                print(aggregated_by)
                 f.print_statistics(tvec_a, data_a)
             else:
-                print("\nConsumption per minute in watt-hour\n")
+                print("\nConsumption per minute in {}\n".format(unit))
                 f.print_statistics(tvec, data)
 
 
