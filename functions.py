@@ -141,8 +141,8 @@ def visualize(data, tvec, zones, agg_by=False):
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(tvec["date"].to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        ax.set_xlablet("Watt Hours")
-        ax.set_ylablet("Minutes")
+        ax.set_xlabel("Watt Hours")
+        ax.set_ylabel("Minutes")
         if agg_by:
             ax.set_ylablet(agg_by)
 
@@ -156,8 +156,8 @@ def visualize(data, tvec, zones, agg_by=False):
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
 
-        ax.set_xlablet("Watt Hours")
-        ax.set_ylablet("Minutes")
+        ax.set_xlabel("Watt Hours")
+        ax.set_ylabel("Minutes")
         if agg_by:
             ax.set_ylablet(agg_by)
 
