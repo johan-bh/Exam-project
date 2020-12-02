@@ -142,10 +142,10 @@ def visualize(data, tvec, zones, agg_by=False):
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        ax.set_xlablet("Watt Hours")
-        ax.set_ylablet("Minutes")
+        ax.set_ylabel("Watt Hours")
+        ax.set_xlabel("Minutes")
         if agg_by:
-            ax.set_ylablet(agg_by)
+            ax.set_xlablet(agg_by)
 
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.arange(start, end, 10))
@@ -155,7 +155,13 @@ def visualize(data, tvec, zones, agg_by=False):
     else:
         fig, ax = plt.subplots(figsize=(11, 8))
         fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
+        ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
+
+        ax.set_ylabel("Watt Hours")
+        ax.set_xlabel("Minutes")
+        if agg_by:
+            ax.set_xlablet(agg_by)
+
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.arange(start, end, 30))
         for tick in ax.get_xticklabels():
