@@ -23,16 +23,21 @@ def load_measurements(filename, fmode):
     # Process the data based on the users request
     if fmode == "forward fill":
         # Drop all corrupt rows if there is a NaN value in the first row
-        if np.nan in df.iloc[0]:
+        if df.iloc[0].isnull().values.any():
             df = df.dropna()
+            print("Warning! There is an invalid measurement in the first row of the file. " +
+                  "All corrupt measurements have been dropped.")
         # Replace NaN values with the latest valid measurement
         else:
             df = df.ffill(axis=0)
+            print("Random")
 
     elif fmode == "backward fill":
         # Drop all corrupt rows if there is a NaN value in the last row
-        if np.nan in df.iloc[-1]:
+        if df.iloc[-1].isnull().values.any():
             df = df.dropna()
+            print("Warning! There is an invalid measurement in the last row of the file. " +
+                  "All corrupt measurements have been dropped.")
         # Replace NaN values with the next valid measurement
         else:
             df = df.bfill(axis=0)
