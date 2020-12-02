@@ -134,39 +134,42 @@ def visualize(data, tvec, zones, agg_by=False):
     """
     dates = pd.to_datetime(tvec)
 
-    # if len(data) > 25:
-    # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
-    if zones == "all":
-        fig, ax = plt.subplots(dpi=128, figsize=(10, 6))
-        fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
+    if len(data) > 25:
+        if zones == "all":
+            fig, ax = plt.subplots(dpi=128, figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        ax.set_xlablet("Watt Hours")
-        ax.set_ylablet("Minutes")
-        if agg_by:
-            ax.set_ylablet(agg_by)
+            ax.set_xlabel("Watt Hours")
+            ax.set_ylabel("Minutes")
+            if agg_by:
+                ax.set_ylabel(agg_by)
 
-        start, end = ax.get_xlim()
-        ax.xaxis.set_ticks(np.arange(start, end, 30))
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(90)
-        plt.show()
+            start, end = ax.get_xlim()
+            ax.xaxis.set_ticks(np.arange(start, end, 30))
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(90)
+            plt.show()
+        else:
+            fig, ax = plt.subplots(dpi=128, figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
+            start, end = ax.get_xlim()
+            ax.set_xlabel("Watt Hours")
+            ax.set_ylabel("Minutes")
+            if agg_by:
+                ax.set_ylabel(agg_by)
+            ax.xaxis.set_ticks(np.arange(start, end, 30))
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(90)
+            plt.show()
+
     else:
-        fig, ax = plt.subplots(dpi=128, figsize=(10, 6))
-        fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
-        start, end = ax.get_xlim()
-        ax.xaxis.set_ticks(np.arange(start, end, 30))
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(90)
-        plt.show()
-
-    # else:
-    #     # TODO: The bar plots needs a x-value which is unknown in this instance..
-    #     if zones == "all":
-    #         plt.bar([data["zone 1"].to_numpy(),data["zone 2"].to_numpy(),data["zone 3"].to_numpy(),data["zone 4"].to_numpy()],
-    #                 color=("blue", "black", "green", "red"))
-    #     else:
-    #         plt.bar(data["zone {}".format(int(zones))])
+        # TODO: The bar plots needs a x-value which is unknown in this instance..
+        if zones == "all":
+            plt.bar([data["zone 1"].to_numpy(),data["zone 2"].to_numpy(),data["zone 3"].to_numpy(),data["zone 4"].to_numpy()],
+                    color=("blue", "black", "green", "red"))
+        else:
+            plt.bar(data["zone {}".format(int(zones))])
 
     return None
