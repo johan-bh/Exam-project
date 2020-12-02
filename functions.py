@@ -92,7 +92,7 @@ def aggregate_measurements(tvec, data, period):
         tvec_a = tvec.drop_duplicates(subset = ['year', 'month'])
 
         # Replace columns with 0 to make sure time starts at the beginning of the month
-        tvec_a.loc[:,["day", "hour", "minute", "second"]] = 0
+        tvec_a.loc[:,["hour", "minute", "second"]] = 0
 
     elif period == "hour of the day":
         data_a = df.groupby('hour').agg({'zone 1': 'mean', 'zone 2': 'mean', 'zone 3': 'mean', 'zone 4': 'mean'})
@@ -149,7 +149,7 @@ def visualize(data, tvec, zones, agg_by=False):
             ax.xaxis.set_ticks(np.arange(start, end, 30))
             for tick in ax.get_xticklabels():
                 tick.set_rotation(90)
-            plt.show()
+
         else:
             fig, ax = plt.subplots(dpi=128, figsize=(10, 6))
             fig.suptitle('Plot of Power Consumption', fontsize=16)
@@ -162,8 +162,6 @@ def visualize(data, tvec, zones, agg_by=False):
             ax.xaxis.set_ticks(np.arange(start, end, 30))
             for tick in ax.get_xticklabels():
                 tick.set_rotation(90)
-            plt.show()
-
     else:
         # TODO: The bar plots needs a x-value which is unknown in this instance..
         if zones == "all":
@@ -171,5 +169,9 @@ def visualize(data, tvec, zones, agg_by=False):
                     color=("blue", "black", "green", "red"))
         else:
             plt.bar(data["zone {}".format(int(zones))])
+
+    # mng = plt.get_current_fig_manager()
+    # mng.resize(*mng.window.maxsize())
+    plt.show()
 
     return None
