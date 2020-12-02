@@ -119,7 +119,7 @@ def print_statistics(tvec, data):
     print(table)
 
 
-def visualize(data, zones, agg_by=False):
+def visualize(data, tvec, zones, agg_by=False):
 
     """
         plot the consumption in each zone or the combined consumption (all zones).
@@ -132,31 +132,34 @@ def visualize(data, zones, agg_by=False):
             zones (str): Desired zones to plots
             agg_by (str): The aggregation period for the data. Default False
     """
-    plt.ion()
-    plt.style.use('seaborn')
-    plt.title("Plot of Power Consumption")
-
+    tvec["date"] = tvec["year"].astype(str) + "-" + tvec["month"].astype(str) + "-" +tvec["day"].astype(str)
 
     # if len(data) > 25:
     # Hvis combined skal forstås som alle i et plot MEN ikke summeret.
     if zones == "all":
-        plt.plot(data["zone 1"].to_numpy(), c="blue")
-        plt.plot(data["zone 2"].to_numpy(), c="red")
-        plt.plot(data["zone 3"].to_numpy(), c="black")
-        plt.plot(data["zone 4"].to_numpy(), c="cyan")
+        fig, ax = plt.subplots(figsize=(11, 8))
+        fig.suptitle('Plot of Power Consumption', fontsize=16)
+        ax.plot(tvec["date"].to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        # Hvis combined skal forstås som sumeret:
-        # plt.plot(data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
-
-        plt.ylabel("Watt Hours")
-        plt.xlabel("Minutes")
+        ax.set_xlablet("Watt Hours")
+        ax.set_ylablet("Minutes")
         if agg_by:
-            plt.xlabel(agg_by)
+            ax.set_ylablet(agg_by)
 
-        # plt.legend(["Consumption in: zone 1", "Consumption in: zone 4", "Consumption in: zone 3", "Consumption in: zone 4"])
-        plt.ylim(0)
+        start, end = ax.get_xlim()
+        ax.xaxis.set_ticks(np.arange(start, end, 10))
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(90)
+        plt.show()
     else:
-        plt.plot(data["zone {}".format(int(zones))])
+        fig, ax = plt.subplots(figsize=(11, 8))
+        fig.suptitle('Plot of Power Consumption', fontsize=16)
+        ax.plot(tvec["date"].to_numpy(), data["zone {}".format(int(zones))])
+        start, end = ax.get_xlim()
+        ax.xaxis.set_ticks(np.arange(start, end, 30))
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(90)
+        plt.show()
 
     # else:
     #     # TODO: The bar plots needs a x-value which is unknown in this instance..

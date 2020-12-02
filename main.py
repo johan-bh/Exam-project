@@ -208,14 +208,13 @@ while True:
             choice = input("Specify if you want the combined zones or particular ('all' or '1,2,3,4')\n")
             if choice.lower() == "all" or int(choice) in [1,2,3,4]:
                 if data_aggregated:
-                    f.visualize(data_a, choice, aggregated_by)
+                    f.visualize(data_a, tvec_a, choice, aggregated_by)
                 else:
-                    f.visualize(data, choice)
+                    f.visualize(data, tvec, choice)
             else:
                 print("\n Please specify a correct choice. \nWrite 'all' or the numerical zone: 1,2,3 or 4\n")
         else:
             print("\nPlease load data first!\n")
-
 
     elif action == "5":
         print("\nThank you for using our program :)")
