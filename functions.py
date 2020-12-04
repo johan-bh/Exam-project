@@ -130,6 +130,7 @@ def visualize(data, tvec, zones, unit, agg_by=False):
         Args:
             data (pandas DataFrame object): N x 4 matrix. Each row is a set of measurements
             zones (str): Desired zones to plots
+            unit (str): Unit to display on plot y axis
             agg_by (str): The aggregation period for the data. Default False
     """
     dates = pd.to_datetime(tvec)
