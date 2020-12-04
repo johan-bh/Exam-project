@@ -205,14 +205,29 @@ while True:
 
     elif action == "4":
         if data_loaded:
-            choice = input("Specify if you want the combined zones or particular ('all' or '1,2,3,4')\n")
-            if choice.lower() == "all" or int(choice) in [1,2,3,4]:
-                if data_aggregated:
-                    f.visualize(data_a, tvec_a, choice, unit, aggregated_by)
+            while True:
+                plot_options = [
+                "(1) Combined zones",
+                "(2) Each zone",
+                "(3) Back"
+                ]
+                choice = input("Would you like to plot the data combined (all zones) or each zone? \n{}\n".format("\n".join(plot_options)))
+
+                if choice == "1":
+                    if data_aggregated:
+                        f.visualize(data_a, tvec_a, "all", unit, aggregated_by)
+                    else:
+                        f.visualize(data, tvec, "all", unit)
+                    break
+                elif choice == "2":
+                    if data_aggregated:
+                        f.visualize(data_a, tvec_a, "each", unit, aggregated_by)
+                    else:
+                        f.visualize(data, tvec, "each", unit)
+                    break
                 else:
-                    f.visualize(data, tvec, choice, unit)
-            else:
-                print("\n Please specify a correct choice. \nWrite 'all' or the numerical zone: 1,2,3 or 4\n")
+                    print("\n Please specify a correct option")
+                    continue
         else:
             print("\nPlease load data first!\n")
 
