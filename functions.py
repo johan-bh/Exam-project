@@ -135,45 +135,56 @@ def visualize(data, tvec, zones, unit, agg_by=False):
     """
     dates = pd.to_datetime(tvec)
 
-    # if len(data) > 25:
-    if zones == "all":
-        fig, ax = plt.subplots(figsize=(10, 6))
-        fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
+    if len(dates) > 25:
+        if zones == "all":
+            fig, ax = plt.subplots(figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        ax.set_ylabel(unit)
-        ax.set_xlabel("Minutes")
-        if agg_by:
-            ax.set_xlabel(agg_by)
+            ax.set_ylabel(unit)
+            ax.set_xlabel("Minutes")
+            if agg_by:
+                ax.set_xlabel(agg_by)
 
-        start, end = ax.get_xlim()
+            start, end = ax.get_xlim()
+            ax.set_ylim(0)
+            ax.xaxis.set_ticks(np.arange(start, end, 30))
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(90)
 
-        ax.xaxis.set_ticks(np.arange(start, end, 30))
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(90)
+        else:
+            fig, ax = plt.subplots(figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
+            start, end = ax.get_xlim()
+            ax.set_ylabel(unit)
+            ax.set_ylim(0)
+            ax.set_xlabel("Minutes")
+            if agg_by:
+                ax.set_xlabel(agg_by)
+            ax.xaxis.set_ticks(np.arange(start, end, 30))
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(90)
 
     else:
-        fig, ax = plt.subplots(figsize=(10, 6))
-        fig.suptitle('Plot of Power Consumption', fontsize=16)
-        ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
-        start, end = ax.get_xlim()
-        ax.set_ylabel(unit)
-        ax.set_xlabel("Minutes")
-        if agg_by:
-            ax.set_xlabel(agg_by)
-        ax.xaxis.set_ticks(np.arange(start, end, 30))
-        for tick in ax.get_xticklabels():
-            tick.set_rotation(90)
-    # else:
-    #     # TODO: The bar plots needs a x-value which is unknown in this instance..
-    #     if zones == "all":
-    #         plt.bar([data["zone 1"].to_numpy(),data["zone 2"].to_numpy(),data["zone 3"].to_numpy(),data["zone 4"].to_numpy()],
-    #                 color=("blue", "black", "green", "red"))
-    #     else:
-    #         plt.bar(data["zone {}".format(int(zones))])
+        # TODO: The bar plots needs a x-value which is unknown in this instance..
+        if zones == "all":
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.set_ylabel(unit)
+            ax.set_xlabel("Minutes")
+            if agg_by:
+                ax.set_xlabel(agg_by)
+            start, end = ax.get_xlim()
+            ax.bar(dates.to_numpy(), data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy(),
+                    color=("blue", "black", "green", "red"))
+            ax.set_ylim(0)
+            ax.set_xticks(dates)
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(90)
 
-    # mng = plt.get_current_fig_manager()
-    # mng.resize(*mng.window.maxsize())
+        else:
+            plt.bar(dates, data["zone {}".format(int(zones))])
+
     plt.tight_layout()
     plt.show()
 
