@@ -153,36 +153,6 @@ def visualize(data, tvec, zones, unit, agg_by=False):
                 tick.set_rotation(90)
 
         else:
-            fig, ax = plt.subplots(figsize=(10, 6))
-            fig.suptitle('Plot of Power Consumption', fontsize=16)
-            ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
-            start, end = ax.get_xlim()
-            ax.set_ylabel(unit)
-            ax.set_ylim(0)
-            ax.set_xlabel("Minutes")
-            if agg_by:
-                ax.set_xlabel(agg_by)
-            ax.xaxis.set_ticks(np.arange(start, end, 30))
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(90)
-
-    else:
-        # TODO: The bar plots needs a x-value which is unknown in this instance..
-        if zones == "all":
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.set_ylabel(unit)
-            ax.set_xlabel("Minutes")
-            if agg_by:
-                ax.set_xlabel(agg_by)
-            start, end = ax.get_xlim()
-            ax.bar(dates.to_numpy(), data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy(),
-                    color=("blue", "black", "green", "red"))
-            ax.set_ylim(0)
-            ax.set_xticks(dates)
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-
-        else:
             fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 6))
             ax.set_ylabel(unit)
             ax.set_xlabel("Minutes")
@@ -193,6 +163,79 @@ def visualize(data, tvec, zones, unit, agg_by=False):
             ax4.set_ylabel(unit)
             ax4.set_xlabel("Minutes")
 
+            ax.set_title("Zone 1")
+            ax2.set_title("Zone 2")
+            ax3.set_title("Zone 3")
+            ax4.set_title("Zone 4")
+
+            if agg_by:
+                ax.set_xlabel(agg_by)
+                ax2.set_xlabel(agg_by)
+                ax3.set_xlabel(agg_by)
+                ax4.set_xlabel(agg_by)
+
+            ax.plot(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
+            ax2.plot(dates.to_numpy(), data["zone 2"].to_numpy(), color=("red"))
+            ax3.plot(dates.to_numpy(), data["zone 3"].to_numpy(), color=("magenta"))
+            ax4.plot(dates.to_numpy(), data["zone 4"].to_numpy(), color=("green"))
+            ax.set_ylim(0)
+            ax2.set_ylim(0)
+            ax3.set_ylim(0)
+            ax4.set_ylim(0)
+            start, end = ax.get_xlim()
+            ax.xaxis.set_ticks(np.arange(start, end, 30))
+            start, end = ax2.get_xlim()
+            ax2.xaxis.set_ticks(np.arange(start, end, 30))
+            start, end = ax3.get_xlim()
+            ax3.xaxis.set_ticks(np.arange(start, end, 30))
+            start, end = ax4.get_xlim()
+            ax4.xaxis.set_ticks(np.arange(start, end, 30))
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax2.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax3.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax4.get_xticklabels():
+                tick.set_rotation(45)
+    
+
+    else:
+        # TODO: The bar plots needs a x-value which is unknown in this instance..
+        if zones == "all":
+            fig, ax = plt.subplots(figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.set_ylabel(unit)
+            ax.set_xlabel("Minutes")
+            if agg_by:
+                ax.set_xlabel(agg_by)
+
+            ax.set_title("Combined Zones")
+            start, end = ax.get_xlim()
+            ax.bar(dates.to_numpy(), data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy(),
+                    color=("blue", "black", "green", "red"))
+            ax.set_ylim(0)
+            ax.set_xticks(dates)
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+
+        else:
+            fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 6))
+            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            ax.set_ylabel(unit)
+            ax.set_xlabel("Minutes")
+            ax2.set_ylabel(unit)
+            ax2.set_xlabel("Minutes")
+            ax3.set_ylabel(unit)
+            ax3.set_xlabel("Minutes")
+            ax4.set_ylabel(unit)
+            ax4.set_xlabel("Minutes")
+
+            ax.set_title("Zone 1")
+            ax2.set_title("Zone 2")
+            ax3.set_title("Zone 3")
+            ax4.set_title("Zone 4")
+
             if agg_by:
                 ax.set_xlabel(agg_by)
                 ax2.set_xlabel(agg_by)
@@ -200,9 +243,9 @@ def visualize(data, tvec, zones, unit, agg_by=False):
                 ax4.set_xlabel(agg_by)
 
             ax.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
-            ax2.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("red"))
-            ax3.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("magenta"))
-            ax4.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("green"))
+            ax2.bar(dates.to_numpy(), data["zone 2"].to_numpy(), color=("red"))
+            ax3.bar(dates.to_numpy(), data["zone 3"].to_numpy(), color=("magenta"))
+            ax4.bar(dates.to_numpy(), data["zone 4"].to_numpy(), color=("green"))
             ax.set_ylim(0)
             ax2.set_ylim(0)
             ax3.set_ylim(0)
