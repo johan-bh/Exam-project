@@ -119,7 +119,7 @@ def print_statistics(tvec, data):
     print(table)
 
 
-def visualize(data, tvec, zones, agg_by=False):
+def visualize(data, tvec, zones, unit, agg_by=False):
 
     """
         plot the consumption in each zone or the combined consumption (all zones).
@@ -140,12 +140,13 @@ def visualize(data, tvec, zones, agg_by=False):
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
-        ax.set_ylabel("Watt Hours")
+        ax.set_ylabel(unit)
         ax.set_xlabel("Minutes")
         if agg_by:
             ax.set_xlabel(agg_by)
 
         start, end = ax.get_xlim()
+
         ax.xaxis.set_ticks(np.arange(start, end, 30))
         for tick in ax.get_xticklabels():
             tick.set_rotation(90)
@@ -155,7 +156,7 @@ def visualize(data, tvec, zones, agg_by=False):
         fig.suptitle('Plot of Power Consumption', fontsize=16)
         ax.plot(dates.to_numpy(), data["zone {}".format(int(zones))])
         start, end = ax.get_xlim()
-        ax.set_ylabel("Watt Hours")
+        ax.set_ylabel(unit)
         ax.set_xlabel("Minutes")
         if agg_by:
             ax.set_xlabel(agg_by)
