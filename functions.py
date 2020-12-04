@@ -180,10 +180,47 @@ def visualize(data, tvec, zones, unit, agg_by=False):
             ax.set_ylim(0)
             ax.set_xticks(dates)
             for tick in ax.get_xticklabels():
-                tick.set_rotation(90)
+                tick.set_rotation(45)
 
         else:
-            plt.bar(dates, data["zone {}".format(int(zones))])
+            fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 6))
+            ax.set_ylabel(unit)
+            ax.set_xlabel("Minutes")
+            ax2.set_ylabel(unit)
+            ax2.set_xlabel("Minutes")
+            ax3.set_ylabel(unit)
+            ax3.set_xlabel("Minutes")
+            ax4.set_ylabel(unit)
+            ax4.set_xlabel("Minutes")
+
+            if agg_by:
+                ax.set_xlabel(agg_by)
+                ax2.set_xlabel(agg_by)
+                ax3.set_xlabel(agg_by)
+                ax4.set_xlabel(agg_by)
+
+            ax.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
+            ax2.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("red"))
+            ax3.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("magenta"))
+            ax4.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("green"))
+            ax.set_ylim(0)
+            ax2.set_ylim(0)
+            ax3.set_ylim(0)
+            ax4.set_ylim(0)
+            ax.set_xticks(dates)
+            ax2.set_xticks(dates)
+            ax3.set_xticks(dates)
+            ax4.set_xticks(dates)
+            for tick in ax.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax2.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax3.get_xticklabels():
+                tick.set_rotation(45)
+            for tick in ax4.get_xticklabels():
+                tick.set_rotation(45)
+
+
 
     plt.tight_layout()
     plt.show()
