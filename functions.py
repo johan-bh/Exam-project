@@ -154,6 +154,7 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
             fig.suptitle('Plot of Power Consumption', fontsize=16)
             ax.plot(dates.to_numpy(),data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
 
+            ax.set_title("Combined Zones")
             ax.set_ylabel(unit)
             ax.set_xlabel("Minutes")
             if agg_by:
@@ -229,8 +230,6 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
                 ax.set_xlabel(agg_by)
 
             ax.set_title("Combined Zones")
-            start, end = ax.get_xlim()
-
 
             ax.bar(dates.to_numpy(), data["zone 1"].to_numpy()+data["zone 2"].to_numpy()+data["zone 3"].to_numpy()+data["zone 4"].to_numpy())
             ax.set_xticks(dates)
