@@ -179,73 +179,44 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
                 tick.set_horizontalalignment('right')
 
         else:
-            fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 5))
-            ax.set_ylabel(unit)
-            ax.set_xlabel("Minutes")
-            ax2.set_ylabel(unit)
-            ax2.set_xlabel("Minutes")
-            ax3.set_ylabel(unit)
-            ax3.set_xlabel("Minutes")
-            ax4.set_ylabel(unit)
-            ax4.set_xlabel("Minutes")
+            fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 5))
 
-            ax.set_title("Zone 1")
+            ax1.set_title("Zone 1")
             ax2.set_title("Zone 2")
             ax3.set_title("Zone 3")
             ax4.set_title("Zone 4")
 
-            if agg_by:
-                ax.set_xlabel(agg_by)
-                ax2.set_xlabel(agg_by)
-                ax3.set_xlabel(agg_by)
-                ax4.set_xlabel(agg_by)
-
-            ax.plot(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
+            ax1.plot(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
             ax2.plot(dates.to_numpy(), data["zone 2"].to_numpy(), color=("red"))
             ax3.plot(dates.to_numpy(), data["zone 3"].to_numpy(), color=("magenta"))
             ax4.plot(dates.to_numpy(), data["zone 4"].to_numpy(), color=("green"))
-            ax.set_ylim(0)
-            ax2.set_ylim(0)
-            ax3.set_ylim(0)
-            ax4.set_ylim(0)
-            start, end = ax.get_xlim()
 
-            # Format date according to the aggregation
+            # Get formatter according to aggregation
             x_format = md.DateFormatter(date_format[agg_by])
-            ax.xaxis.set_major_formatter(x_format)
-            ax2.xaxis.set_major_formatter(x_format)
-            ax3.xaxis.set_major_formatter(x_format)
-            ax4.xaxis.set_major_formatter(x_format)
 
             # Determine a proper tick frequency
             tick_frequency = len(dates) // 10
             # Get tick locator according to aggregation
             xtick_locator = date_locators[agg_by](interval=tick_frequency)
-            # Set the locator
-            ax.xaxis.set_major_locator(xtick_locator)
-            ax2.xaxis.set_major_locator(xtick_locator)
-            ax3.xaxis.set_major_locator(xtick_locator)
-            ax4.xaxis.set_major_locator(xtick_locator)
 
-            # Rotate and align ticks
-            for tick in ax.get_xticklabels():
-                tick.set_rotation(45)
-                tick.set_horizontalalignment('right')
-            for tick in ax2.get_xticklabels():
-                tick.set_rotation(45)
-                tick.set_horizontalalignment('right')
-            for tick in ax3.get_xticklabels():
-                tick.set_rotation(45)
-                tick.set_horizontalalignment('right')
-            for tick in ax4.get_xticklabels():
-                tick.set_rotation(45)
-                tick.set_horizontalalignment('right')
 
-            # Set tick label size
-            ax.tick_params(labelsize=6)
-            ax2.tick_params(labelsize=6)
-            ax3.tick_params(labelsize=6)
-            ax4.tick_params(labelsize=6)
+            for ax in [ax1, ax2, ax3, ax4]:
+                # Set labels
+                ax.set_ylabel(unit)
+                ax.set_xlabel(agg_by)
+
+                ax.set_ylim(0)
+                # Set formatter
+                ax.xaxis.set_major_formatter(x_format)
+                # Set the locator
+                ax.xaxis.set_major_locator(xtick_locator)
+
+                # Rotate and align ticks
+                for tick in ax.get_xticklabels():
+                    tick.set_rotation(45)
+                    tick.set_horizontalalignment('right')
+
+                ax.tick_params(labelsize=6)
 
     else:
         # TODO: The bar plots needs a x-value which is unknown in this instance..
@@ -277,69 +248,44 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
             ax.set_ylim(0)
 
         else:
-            fig, ((ax, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 5))
+            fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 5))
             fig.suptitle('Plot of Power Consumption', fontsize=16)
-            ax.set_ylabel(unit)
-            ax.set_xlabel("Minutes")
-            ax2.set_ylabel(unit)
-            ax2.set_xlabel("Minutes")
-            ax3.set_ylabel(unit)
-            ax3.set_xlabel("Minutes")
-            ax4.set_ylabel(unit)
-            ax4.set_xlabel("Minutes")
 
-            ax.set_title("Zone 1")
+            ax1.set_title("Zone 1")
             ax2.set_title("Zone 2")
             ax3.set_title("Zone 3")
             ax4.set_title("Zone 4")
 
-            if agg_by:
-                ax.set_xlabel(agg_by)
-                ax2.set_xlabel(agg_by)
-                ax3.set_xlabel(agg_by)
-                ax4.set_xlabel(agg_by)
-
-            ax.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
+            ax1.bar(dates.to_numpy(), data["zone 1"].to_numpy(), color=("blue"))
             ax2.bar(dates.to_numpy(), data["zone 2"].to_numpy(), color=("red"))
             ax3.bar(dates.to_numpy(), data["zone 3"].to_numpy(), color=("magenta"))
             ax4.bar(dates.to_numpy(), data["zone 4"].to_numpy(), color=("green"))
-            ax.set_ylim(0)
-            ax2.set_ylim(0)
-            ax3.set_ylim(0)
-            ax4.set_ylim(0)
-            ax.set_xticks(dates)
-            ax2.set_xticks(dates)
-            ax3.set_xticks(dates)
-            ax4.set_xticks(dates)
-
-            # Only format ticks if is datetime
-            if is_datetime:
-                # Format date according to the aggregation
-                x_format = md.DateFormatter(date_format[agg_by])
-                ax.xaxis.set_major_formatter(x_format)
-                ax2.xaxis.set_major_formatter(x_format)
-                ax3.xaxis.set_major_formatter(x_format)
-                ax4.xaxis.set_major_formatter(x_format)
-
-                for tick in ax.get_xticklabels():
-                    tick.set_rotation(45)
-                    tick.set_horizontalalignment('right')
-                for tick in ax2.get_xticklabels():
-                    tick.set_rotation(45)
-                    tick.set_horizontalalignment('right')
-                for tick in ax3.get_xticklabels():
-                    tick.set_rotation(45)
-                    tick.set_horizontalalignment('right')
-                for tick in ax4.get_xticklabels():
-                    tick.set_rotation(45)
-                    tick.set_horizontalalignment('right')
 
 
-            # Set tick label size
-            ax.tick_params(labelsize=6)
-            ax2.tick_params(labelsize=6)
-            ax3.tick_params(labelsize=6)
-            ax4.tick_params(labelsize=6)
+            for ax in [ax1, ax2, ax3, ax4]:
+                # Set labels
+                ax.set_ylabel(unit)
+                ax.set_xlabel(agg_by)
+
+                # y limit
+                ax.set_ylim(0)
+
+                # Set tick
+                ax.set_xticks(dates)
+
+                # Only format ticks if is datetime
+                if is_datetime:
+                    # Format date according to the aggregation
+                    x_format = md.DateFormatter(date_format[agg_by])
+                    ax.xaxis.set_major_formatter(x_format)
+                    # Rotate and align tick labels
+                    for tick in ax.get_xticklabels():
+                        tick.set_rotation(45)
+                        tick.set_horizontalalignment('right')
+
+                # Set tick label size
+                ax.tick_params(labelsize=6)
+
     plt.tight_layout()
     plt.show()
 
