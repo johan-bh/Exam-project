@@ -51,9 +51,6 @@ def load_measurements(filename, fmode):
     tvec = df.iloc[:,:-4]
     data = df.iloc[:,-4:]
 
-    #df1 = df[df.isna().any(axis=1)]
-    #print(df1)
-
     return (tvec, data)
 
 def aggregate_measurements(tvec, data, period):
@@ -112,8 +109,12 @@ def print_statistics(tvec, data):
         tvec (pandas DataFrame object): N x 6 matrix. Each row is a time vector
         data (pandas DataFrame object): N x 4 matrix. Each row is a set of measurements
     """
+    # Create a collum with data from all 4 zones
     data["All"] = data.sum(axis=1)
+    # Use the built-in statistics function in Pandas and slice off the first irrelevant rows.
+    # Transpose the table to match the required layout.
     table = data.describe().iloc[3:].T
+    # Rename the columns according to requirements
     table = table.rename(columns={"index":"Zone", "minute":"Minimum", "25%":" 1. quart.",
                           "50%":" 2. quart.", "75%":" 3. quart.", "max":"Maximum"},
                          index={'zone 1':'1','zone 2':'2','zone 3':'3','zone 4':'4'})
