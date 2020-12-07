@@ -220,10 +220,10 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
                 ax.tick_params(labelsize=6)
 
     else:
-        # TODO: The bar plots needs a x-value which is unknown in this instance..
+        # There are less than 25 datapoints and we substitute the Graph plot with a Bar plot
         if zones == "all":
             fig, ax = plt.subplots(figsize=(10, 5))
-            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            fig.suptitle('Bar Plot of Power Consumption', fontsize=16)
             ax.set_ylabel(unit)
             ax.set_xlabel("Minutes")
             if agg_by:
@@ -248,7 +248,7 @@ def visualize(data, tvec, zones, unit, agg_by="minute"):
 
         else:
             fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2, figsize=(10, 5))
-            fig.suptitle('Plot of Power Consumption', fontsize=16)
+            fig.suptitle('Bar Plot of Power Consumption', fontsize=16)
 
             ax1.set_title("Zone 1")
             ax2.set_title("Zone 2")
